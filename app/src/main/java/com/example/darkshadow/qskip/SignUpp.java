@@ -1,6 +1,7 @@
 package com.example.darkshadow.qskip;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpp extends AppCompatActivity {
 
@@ -22,6 +25,8 @@ public class SignUpp extends AppCompatActivity {
     EditText name,email,password,confirmPassword;
     String e,p,n,cp;
     FirebaseAuth mAuth;
+    FirebaseUser user;
+
 
 
     @Override
@@ -29,10 +34,15 @@ public class SignUpp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_upp);
 
+        //firebase
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        final DatabaseReference mDatabase;
 
         signup = (Button) findViewById(R.id.signupSubmitButton);
         name = (EditText) findViewById(R.id.signupNameField);
@@ -51,6 +61,7 @@ public class SignUpp extends AppCompatActivity {
                 if(p.equals(cp))
                 {
                     signuppp();
+
                 }
                 else
                 {
@@ -70,8 +81,31 @@ public class SignUpp extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d("work", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(SignUpp.this, SignInn.class);
-                            startActivity(intent);
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference uID = database.getReference("User").child(user.getUid()).child("Name");
+                            uID.setValue(user.getUid());
+                            DatabaseReference uName = database.getReference("User").child(user.getUid()).child("Name");
+                            uID.setValue(n);
+                            DatabaseReference myRef = database.getReference("User").child(user.getUid()).child("Email");
+                            myRef.setValue(e);
+                            DatabaseReference pass = database.getReference("User").child(user.getUid()).child("Pass");
+                            pass.setValue(p);
+
+
+                            CountDownTimer timeOutRed;
+                            timeOutRed=new CountDownTimer(3000, 1000) { // adjust the milli seconds here
+                                public void onTick(long millisUntilFinished) {
+
+                                }
+
+                                public void onFinish() {
+                                    Intent intent = new Intent(SignUpp.this, SignInn.class);
+                                    startActivity(intent);
+
+                                }
+                            }.start();
+
                         } else {
                             Log.w("work", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(SignUpp.this, "Authentication failed.",
