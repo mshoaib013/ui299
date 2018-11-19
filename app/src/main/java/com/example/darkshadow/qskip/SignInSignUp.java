@@ -52,30 +52,10 @@ public class SignInSignUp extends AppCompatActivity {
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        signupp();
 
 
     }
-    void signupp(){
-        mAuth.createUserWithEmailAndPassword("mynameisabir1993@gmail.com", "hahaha")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("work", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("work", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignInSignUp.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
 
-                        // ...
-                    }
-                });
-    }
     @Override
     public void onStart() {
         super.onStart();

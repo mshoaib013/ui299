@@ -58,8 +58,10 @@ public class UserHome extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Toast.makeText(UserHome.this, "This is my Toast message!",Toast.LENGTH_LONG).show();
-                viewOne.setVisibility(View.GONE);
-                viewTwo.setVisibility(View.VISIBLE);
+//                viewOne.setVisibility(View.GONE);
+//                viewTwo.setVisibility(View.VISIBLE);
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                startActivity(intent);
             }
         });
 
