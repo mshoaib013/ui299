@@ -4,38 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUp">
+    tools:context=".SignInn">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
         android:foregroundGravity="center">
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Name"/>
 
         <EditText
+            android:id="@+id/signinEmailField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Username"/>
+            android:hint="Email"/>
         <EditText
+            android:id="@+id/signinPassField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Password"/>
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Conform Password"/>
         <Button
-            android:id="@+id/signupSubmitButton"
+            android:id="@+id/signinSubmitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign Up"/>
 
 
     </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

@@ -117,7 +117,7 @@ public class Splash extends AppCompatActivity {
 
             public void onFinish() {
                 //timeCountdown.setBackgroundColor(Color.RED);
-                Intent intent = new Intent(Splash.this, Mode.class);
+                Intent intent = new Intent(Splash.this, SignUpp.class);
                 startActivity(intent);
 
             }

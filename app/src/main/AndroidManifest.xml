@@ -27,16 +27,14 @@
         </activity>
         <activity android:name=".Mode" />
         <activity android:name=".SignInSignUp" />
-        <activity android:name=".SignUp" />
-        <activity
-            android:name=".SignIn"
-            android:label="@string/title_activity_sign_in" />
         <activity
             android:name=".UserHome"
             android:label="@string/title_activity_user_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".InstitutionHome" />
-        <activity android:name=".InstitutionOption"></activity>
+        <activity android:name=".InstitutionOption" />
+        <activity android:name=".SignInn" />
+        <activity android:name=".SignUpp"></activity>
     </application>
 
 </manifest>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignInSignUp">
+    tools:context=".SignUpp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,25 +12,36 @@
         android:orientation="vertical"
         android:gravity="center"
         android:foregroundGravity="center">
+        <EditText
+            android:id="@+id/signupNameField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Name"/>
+
+        <EditText
+            android:id="@+id/signupEmailField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Email"/>
+        <EditText
+            android:id="@+id/signupPassField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Password"/>
+
+        <EditText
+            android:id="@+id/signupRepeatPassField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Conform Password"/>
         <Button
-            android:id="@+id/signupButton"
+            android:id="@+id/signupSubmitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign Up"/>
-        <Button
-            android:id="@+id/signInButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign In"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OR"/>
-        <Button
-            android:id="@+id/federatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign In With Gmail"/>
+
 
     </LinearLayout>
+
+
 </android.support.constraint.ConstraintLayout>
