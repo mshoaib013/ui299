@@ -60,7 +60,7 @@ public class SignUpp extends AppCompatActivity {
 
                 if(p.equals(cp))
                 {
-                    signuppp();
+                    signuppp(n,e,p);
 
                 }
                 else
@@ -73,38 +73,53 @@ public class SignUpp extends AppCompatActivity {
         });
     }
 
-    void signuppp(){
+    void signuppp(String name,String email,String pass){
+        final SignupController setDefaultUserDataUsingController = new SignupController(name,email,pass);
         mAuth.createUserWithEmailAndPassword(e,p)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("work", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            {
+                                Log.d("work", "createUserWithEmail:success");
+                                final DatabaseReference mDatabase;
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                mDatabase = FirebaseDatabase.getInstance().getReference().child("U").child(user.getUid());
+                                mDatabase.setValue(setDefaultUserDataUsingController).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        final Intent intent = new Intent(SignUpp.this, SignInn.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
 
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference uID = database.getReference("User").child(user.getUid()).child("Name");
-                            uID.setValue(user.getUid());
-                            DatabaseReference uName = database.getReference("User").child(user.getUid()).child("Name");
-                            uID.setValue(n);
-                            DatabaseReference myRef = database.getReference("User").child(user.getUid()).child("Email");
-                            myRef.setValue(e);
-                            DatabaseReference pass = database.getReference("User").child(user.getUid()).child("Pass");
-                            pass.setValue(p);
-
-
-                            CountDownTimer timeOutRed;
-                            timeOutRed=new CountDownTimer(3000, 1000) { // adjust the milli seconds here
-                                public void onTick(long millisUntilFinished) {
-
-                                }
-
-                                public void onFinish() {
-                                    Intent intent = new Intent(SignUpp.this, SignInn.class);
-                                    startActivity(intent);
-
-                                }
-                            }.start();
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//
+//                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                            DatabaseReference uID = database.getReference("User").child(user.getUid()).child("Name");
+//                            uID.setValue(user.getUid());
+//                            DatabaseReference uName = database.getReference("User").child(user.getUid()).child("Name");
+//                            uID.setValue(n);
+//                            DatabaseReference myRef = database.getReference("User").child(user.getUid()).child("Email");
+//                            myRef.setValue(e);
+//                            DatabaseReference pass = database.getReference("User").child(user.getUid()).child("Pass");
+//                            pass.setValue(p);
+//
+//
+//                            CountDownTimer timeOutRed;
+//                            timeOutRed=new CountDownTimer(3000, 1000) { // adjust the milli seconds here
+//                                public void onTick(long millisUntilFinished) {
+//
+//                                }
+//
+//                                public void onFinish() {
+//                                    Intent intent = new Intent(SignUpp.this, SignInn.class);
+//                                    startActivity(intent);
+//
+//                                }
+//                            }.start();
 
                         } else {
                             Log.w("work", "createUserWithEmail:failure", task.getException());
