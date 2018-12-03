@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class SignInSignUp extends AppCompatActivity {
 
     FirebaseAuth mAuth;
+    String message;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
@@ -31,6 +32,7 @@ public class SignInSignUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SignInSignUp.this, SignUpp.class);
+                intent.putExtra("mode", message);
                 startActivity(intent);
             }
         });
@@ -52,6 +54,11 @@ public class SignInSignUp extends AppCompatActivity {
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        String s;
+        Intent intent=getIntent();
+        message = getIntent().getExtras().getString("mode");
+        Log.d("getextra", message);
 
 
     }

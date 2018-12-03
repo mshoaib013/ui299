@@ -23,7 +23,7 @@ public class SignUpp extends AppCompatActivity {
 
     Button signup;
     EditText name,email,password,confirmPassword;
-    String e,p,n,cp;
+    String e,p,n,cp,message;
     FirebaseAuth mAuth;
     FirebaseUser user;
 
@@ -33,6 +33,8 @@ public class SignUpp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_upp);
+
+        message = getIntent().getExtras().getString("mode");
 
         //firebase
 
@@ -74,7 +76,9 @@ public class SignUpp extends AppCompatActivity {
     }
 
     void signuppp(String name,String email,String pass){
-        final SignupController setDefaultUserDataUsingController = new SignupController(name,email,pass);
+        final SignupController setDefaultUserDataUsingController = new SignupController(name,email,pass,0);
+        final SignupControllerOrg setDefaultOrgDataUsingController = new SignupControllerOrg(name,email,pass,0,0);
+
         mAuth.createUserWithEmailAndPassword(e,p)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -85,41 +89,30 @@ public class SignUpp extends AppCompatActivity {
                                 Log.d("work", "createUserWithEmail:success");
                                 final DatabaseReference mDatabase;
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                mDatabase = FirebaseDatabase.getInstance().getReference().child("U").child(user.getUid());
-                                mDatabase.setValue(setDefaultUserDataUsingController).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        final Intent intent = new Intent(SignUpp.this, SignInn.class);
-                                        startActivity(intent);
-                                    }
-                                });
+                                if (message.equals("1")){
+                                    mDatabase = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+                                    mDatabase.setValue(setDefaultUserDataUsingController).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            final Intent intent = new Intent(SignUpp.this, SignInn.class);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
+                                else {
+                                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child(user.getUid());
+                                    mDatabase.setValue(setDefaultOrgDataUsingController).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            final Intent intent = new Intent(SignUpp.this, SignInn.class);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
+//                                mDatabase = FirebaseDatabase.getInstance().getReference().child("U").child(user.getUid());
+
                             }
 
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//
-//                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-//                            DatabaseReference uID = database.getReference("User").child(user.getUid()).child("Name");
-//                            uID.setValue(user.getUid());
-//                            DatabaseReference uName = database.getReference("User").child(user.getUid()).child("Name");
-//                            uID.setValue(n);
-//                            DatabaseReference myRef = database.getReference("User").child(user.getUid()).child("Email");
-//                            myRef.setValue(e);
-//                            DatabaseReference pass = database.getReference("User").child(user.getUid()).child("Pass");
-//                            pass.setValue(p);
-//
-//
-//                            CountDownTimer timeOutRed;
-//                            timeOutRed=new CountDownTimer(3000, 1000) { // adjust the milli seconds here
-//                                public void onTick(long millisUntilFinished) {
-//
-//                                }
-//
-//                                public void onFinish() {
-//                                    Intent intent = new Intent(SignUpp.this, SignInn.class);
-//                                    startActivity(intent);
-//
-//                                }
-//                            }.start();
 
                         } else {
                             Log.w("work", "createUserWithEmail:failure", task.getException());

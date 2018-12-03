@@ -1,10 +1,17 @@
 package com.example.darkshadow.qskip;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,17 +23,43 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.blikoon.qrcodescanner.QrCodeActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class UserHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    FirebaseAuth mAuth;
     LinearLayout viewOne;
     LinearLayout viewTwo;
+    private static final int REQUEST_CODE_QR_SCAN = 101;
+    Bitmap bitmap;
+    Integer totalInQ;
+    String uid;
+    FirebaseUser user;
+    int i = 0;
+    FirebaseDatabase database;
+    DatabaseReference mDatabase;
+    TextView currentPosition,estimatedTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home);
+        currentPosition = (TextView)findViewById(R.id.userHomeCurrentPosition);
+        estimatedTime = (TextView)findViewById(R.id.userHomeEstimatedTime);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -59,52 +92,39 @@ public class UserHome extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Toast.makeText(UserHome.this, "This is my Toast message!",Toast.LENGTH_LONG).show();
-//                viewOne.setVisibility(View.GONE);
-//                viewTwo.setVisibility(View.VISIBLE);
-//                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-//                startActivity(intent);
-                try {
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child("Pjl68etfWfZzzh9bHZJTAGKQZCv1");
+//                user = mAuth.getCurrentUser();
+                mDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                    intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // "PRODUCT_MODE for bar codes
+                        totalInQ = (int) (long) dataSnapshot.child("que").getChildrenCount();
+                        final SignupControllerOrg getOrgInfo=dataSnapshot.getValue(SignupControllerOrg.class);
 
-                    startActivityForResult(intent, 0);
+                        uid = mAuth.getUid();
+//                        String email = getOrgInfo.getEmail();
+//                        mDatabase.child("")
+//                        mDatabase.child("aa").child("bb");
+                        if (i<=0){
+                            setQue();
+                        }
 
-                } catch (Exception e) {
 
-                    Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
-                    Intent marketIntent = new Intent(Intent.ACTION_VIEW,marketUri);
-                    startActivity(marketIntent);
+                    }
 
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
             }
         });
-
-        cancelAppointment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(UserHome.this, InstitutionHome.class);
-                startActivity(intent);
-            }
-        });
-
-
-
-
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
 
-            if (resultCode == RESULT_OK) {
-                String contents = data.getStringExtra("SCAN_RESULT");
-            }
-            if(resultCode == RESULT_CANCELED){
-                //handle cancel
-            }
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -161,5 +181,85 @@ public class UserHome extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    void setQue(){
+        i=10;
+        final QueController setQueController = new QueController(uid,totalInQ);
+
+        mDatabase.child("que").child(String.valueOf(totalInQ)).setValue(setQueController).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+//                                final DatabaseReference matabase;
+//                                matabase = FirebaseDatabase.getInstance().getReference().child("Org").child("yeVr6Ll2OahgcXR5olP6tnf3Pi42").child("runningSerial");
+//                                matabase.setValue(matabase,totalInQ).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        Log.d("Workinggggggggggg", "onComplete: ");
+//                                    }
+//                                });
+//                viewOne.setVisibility(View.GONE);
+//                viewTwo.setVisibility(View.VISIBLE);
+                currentPosition.setText("Current Position : "+totalInQ);
+                estimatedTime.setText("Estimated Time : "+totalInQ/2);
+
+                Intent i = new Intent(UserHome.this,QrCodeActivity.class);
+                startActivityForResult( i,REQUEST_CODE_QR_SCAN);
+
+
+
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode != Activity.RESULT_OK)
+        {
+            if(data==null)
+                return;
+            //Getting the passed result
+            String result = data.getStringExtra("com.blikoon.qrcodescanner.error_decoding_image");
+            if( result!=null)
+            {
+                AlertDialog alertDialog = new AlertDialog.Builder(UserHome.this).create();
+                alertDialog.setTitle("Scan Error");
+                alertDialog.setMessage("QR Code could not be scanned");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+            return;
+
+        }
+        if(requestCode == REQUEST_CODE_QR_SCAN)
+        {
+            if(data==null)
+                return;
+            //Getting the passed result
+            String result = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
+            AlertDialog alertDialog = new AlertDialog.Builder(UserHome.this).create();
+            alertDialog.setTitle("Scan result");
+            alertDialog.setMessage(result);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+
+            if (result.equals("Pjl68etfWfZzzh9bHZJTAGKQZCv1")){
+                viewOne.setVisibility(View.GONE);
+                viewTwo.setVisibility(View.VISIBLE);
+            }
+
+        }
     }
 }

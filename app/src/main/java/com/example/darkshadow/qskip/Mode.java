@@ -19,6 +19,7 @@ public class Mode extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Mode.this, SignInSignUp.class);
+                intent.putExtra("mode", "1");
                 startActivity(intent);
             }
         });
@@ -26,7 +27,8 @@ public class Mode extends AppCompatActivity {
         institutionMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Mode.this, SignInSignUp.class);
+                Intent intent = new Intent(Mode.this, InstitutionHome.class);
+                intent.putExtra("mode", "2");
                 startActivity(intent);
             }
         });

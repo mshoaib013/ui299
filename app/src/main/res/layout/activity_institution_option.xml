@@ -13,11 +13,15 @@
         android:gravity="center"
         android:foregroundGravity="center">
 
-        <EditText
+        <TextView
+            android:textAlignment="center"
+            android:id="@+id/insttutionOptionServiceLeft"
+            android:textSize="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Service Left"/>
         <Button
+            android:id="@+id/institutionOptionsNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Next"/>

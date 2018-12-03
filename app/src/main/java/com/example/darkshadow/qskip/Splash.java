@@ -3,12 +3,20 @@ package com.example.darkshadow.qskip;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -88,7 +96,6 @@ public class Splash extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_splash);
 
         mVisible = true;
@@ -116,7 +123,36 @@ public class Splash extends AppCompatActivity {
             }
 
             public void onFinish() {
-                //timeCountdown.setBackgroundColor(Color.RED);
+                FirebaseAuth mAuth;
+                DatabaseReference mDatabase;
+                mAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+//                if (currentUser!=null){
+//                    currentUser.getEmail().equals("");
+//                }
+
+                try {
+                    String test = currentUser.getEmail();
+                    Log.d("dataShow", test);
+
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child(currentUser.getUid()).child("email");
+                    Log.d("authDataMail", mDatabase.getKey());
+
+                }
+                catch (Exception e){
+
+                }
+//                Log.d("authDataMail", currentUser.getEmail().toString());
+//                try{
+//                    if (mDatabase!=null){
+//                        Intent intent = new Intent(Splash.this, Mode.class);
+//                        startActivity(intent);
+//                    }
+//                }catch (Exception e){
+////                    Intent intent = new Intent(Splash.this, Mode.class);
+////                    startActivity(intent);
+//                }
+
                 Intent intent = new Intent(Splash.this, Mode.class);
                 startActivity(intent);
 

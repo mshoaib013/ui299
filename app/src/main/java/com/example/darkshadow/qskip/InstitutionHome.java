@@ -21,6 +21,14 @@ public class InstitutionHome extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Button serv = (Button) findViewById(R.id.institutionHomeService);
+        serv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InstitutionHome.this, InstitutionOption.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }
