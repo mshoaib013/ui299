@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class InstitutionHome extends AppCompatActivity {
     @Override
     public void onBackPressed() {
@@ -31,6 +33,14 @@ public class InstitutionHome extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(InstitutionHome.this, InstitutionOption.class);
                 startActivity(intent);
+            }
+        });
+
+        Button signout = (Button) findViewById(R.id.institutionSignout);
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
             }
         });
 

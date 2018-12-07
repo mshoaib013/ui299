@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,11 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignUpp extends AppCompatActivity {
 
     Button signup;
-    EditText name,email,password,confirmPassword;
+    EditText name,email,password,confirmPassword,numberOfCounter;
     String e,p,n,cp,message;
     FirebaseAuth mAuth;
     FirebaseUser user;
     Spinner spinner;
+    int noOfCounter;
 
 
 
@@ -36,6 +38,7 @@ public class SignUpp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_upp);
+
 
         //Spinner
         spinner = (Spinner) findViewById(R.id.signupSpinner);
@@ -47,11 +50,6 @@ public class SignUpp extends AppCompatActivity {
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
-//        message = getIntent().getExtras().getString("mode");
-//
-//        Log.d("zzzzzzzzzzzzzzzzzzz", message);
-
-        //firebase
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -66,6 +64,25 @@ public class SignUpp extends AppCompatActivity {
         email = (EditText) findViewById(R.id.signupEmailField);
         password = (EditText) findViewById(R.id.signupPassField);
         confirmPassword = (EditText) findViewById(R.id.signupRepeatPassField);
+        numberOfCounter = (EditText) findViewById(R.id.signupNumberOfCounter);
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                String selectedItem = parent.getItemAtPosition(position).toString(); //this is your selected item
+                if (selectedItem.equals("Institution")){
+                    numberOfCounter.setVisibility(View.VISIBLE);
+                }
+                else{
+                    numberOfCounter.setVisibility(View.GONE);
+                }
+            }
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,16 +143,12 @@ public class SignUpp extends AppCompatActivity {
                                     });
                                 }
 //                                mDatabase = FirebaseDatabase.getInstance().getReference().child("U").child(user.getUid());
-
                             }
-
-
                         } else {
                             Log.w("work", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(SignUpp.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
     }
