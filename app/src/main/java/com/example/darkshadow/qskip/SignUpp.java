@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +28,7 @@ public class SignUpp extends AppCompatActivity {
     String e,p,n,cp,message;
     FirebaseAuth mAuth;
     FirebaseUser user;
+    Spinner spinner;
 
 
 
@@ -34,7 +37,19 @@ public class SignUpp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_upp);
 
-        message = getIntent().getExtras().getString("mode");
+        //Spinner
+        spinner = (Spinner) findViewById(R.id.signupSpinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.planets_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+//        message = getIntent().getExtras().getString("mode");
+//
+//        Log.d("zzzzzzzzzzzzzzzzzzz", message);
 
         //firebase
 
@@ -55,6 +70,7 @@ public class SignUpp extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                message = spinner.getSelectedItem().toString();
                 e = email.getText().toString();
                 p = password.getText().toString();
                 n = name.getText().toString();
@@ -89,7 +105,7 @@ public class SignUpp extends AppCompatActivity {
                                 Log.d("work", "createUserWithEmail:success");
                                 final DatabaseReference mDatabase;
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                if (message.equals("1")){
+                                if (message.equals("User")){
                                     mDatabase = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
                                     mDatabase.setValue(setDefaultUserDataUsingController).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override

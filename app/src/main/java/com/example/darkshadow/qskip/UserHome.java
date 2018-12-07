@@ -49,7 +49,7 @@ public class UserHome extends AppCompatActivity
     String uid;
     FirebaseUser user;
     int i = 0;
-    FirebaseDatabase database;
+    DatabaseReference database;
     DatabaseReference mDatabase;
     TextView currentPosition,estimatedTime;
     @Override
@@ -185,6 +185,18 @@ public class UserHome extends AppCompatActivity
     void setQue(){
         i=10;
         final QueController setQueController = new QueController(uid,totalInQ);
+//        database = FirebaseDatabase.getInstance().getReference().child("total");
+//        database.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                int total = dataSnapshot.
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         mDatabase.child("que").child(String.valueOf(totalInQ)).setValue(setQueController).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

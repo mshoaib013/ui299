@@ -11,12 +11,23 @@
         android:orientation="vertical"
         android:gravity="center"
         android:foregroundGravity="center">
+        <TextView
+            android:id="@+id/userModeWaitingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wait a while..."
+            android:textAlignment="center"
+            android:textColor="#FF0000"
+            android:textSize="30dp"/>
+
         <Button
+            android:visibility="gone"
             android:id="@+id/userModeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User Mode"/>
         <Button
+            android:visibility="gone"
             android:id="@+id/institutionModeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

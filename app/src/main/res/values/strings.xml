@@ -1,4 +1,11 @@
 <resources>
+
+    <string-array name="planets_array">
+        <item>Select One</item>
+        <item>Institution</item>
+        <item>User</item>
+    </string-array>
+
     <string name="app_name">Qskip</string>
 
     <string name="dummy_button">Dummy Button</string>
@@ -24,3 +31,4 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 </resources>
+

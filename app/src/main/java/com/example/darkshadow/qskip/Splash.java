@@ -127,34 +127,16 @@ public class Splash extends AppCompatActivity {
                 DatabaseReference mDatabase;
                 mAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = mAuth.getCurrentUser();
-//                if (currentUser!=null){
-//                    currentUser.getEmail().equals("");
-//                }
-
-                try {
-                    String test = currentUser.getEmail();
-                    Log.d("dataShow", test);
-
-                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child(currentUser.getUid()).child("email");
-                    Log.d("authDataMail", mDatabase.getKey());
-
+                if (currentUser!=null){
+                    Intent intent = new Intent(Splash.this, Mode.class);
+                    startActivity(intent);
                 }
-                catch (Exception e){
-
+                else{
+                    Intent intent = new Intent(Splash.this, SignInSignUp.class);
+                    startActivity(intent);
                 }
-//                Log.d("authDataMail", currentUser.getEmail().toString());
-//                try{
-//                    if (mDatabase!=null){
-//                        Intent intent = new Intent(Splash.this, Mode.class);
-//                        startActivity(intent);
-//                    }
-//                }catch (Exception e){
-////                    Intent intent = new Intent(Splash.this, Mode.class);
-////                    startActivity(intent);
-//                }
 
-                Intent intent = new Intent(Splash.this, Mode.class);
-                startActivity(intent);
+
 
             }
         }.start();

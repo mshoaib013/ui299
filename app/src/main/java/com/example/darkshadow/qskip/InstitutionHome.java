@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 
 public class InstitutionHome extends AppCompatActivity {
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

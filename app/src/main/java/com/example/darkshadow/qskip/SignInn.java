@@ -64,7 +64,7 @@ public class SignInn extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(SignInn.this, e+p ,
                                     Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(SignInn.this, UserHome.class);
+                            Intent intent = new Intent(SignInn.this, Mode.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(SignInn.this, e+p+" not working" ,

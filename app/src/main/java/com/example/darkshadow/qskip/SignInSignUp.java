@@ -57,8 +57,8 @@ public class SignInSignUp extends AppCompatActivity {
 
         String s;
         Intent intent=getIntent();
-        message = getIntent().getExtras().getString("mode");
-        Log.d("getextra", message);
+//        message = getIntent().getExtras().getString("mode");
+//        Log.d("getextra", message);
 
 
     }
