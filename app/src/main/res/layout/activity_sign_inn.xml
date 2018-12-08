@@ -16,18 +16,20 @@
             android:id="@+id/signinEmailField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             android:hint="Email"/>
         <EditText
             android:id="@+id/signinPassField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Password"/>
+            android:hint="Password"
+            android:inputType="textPassword"/>
 
         <Button
             android:id="@+id/signinSubmitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Up"/>
+            android:text="Login"/>
 
 
     </LinearLayout>

@@ -41,6 +41,9 @@ public class InstitutionHome extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+
+                Intent intent = new Intent(InstitutionHome.this, SignInSignUp.class);
+                startActivity(intent);
             }
         });
 

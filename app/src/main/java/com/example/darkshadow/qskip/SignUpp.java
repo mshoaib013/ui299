@@ -30,7 +30,7 @@ public class SignUpp extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser user;
     Spinner spinner;
-    int noOfCounter;
+    Integer noOfCounter = 1;
 
 
 
@@ -70,6 +70,7 @@ public class SignUpp extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
+
                 String selectedItem = parent.getItemAtPosition(position).toString(); //this is your selected item
                 if (selectedItem.equals("Institution")){
                     numberOfCounter.setVisibility(View.VISIBLE);
@@ -93,6 +94,7 @@ public class SignUpp extends AppCompatActivity {
                 n = name.getText().toString();
                 cp = confirmPassword.getText().toString();
 
+
                 if(p.equals(cp))
                 {
                     signuppp(n,e,p);
@@ -109,8 +111,12 @@ public class SignUpp extends AppCompatActivity {
     }
 
     void signuppp(String name,String email,String pass){
+        if (numberOfCounter.getVisibility()==View.VISIBLE){
+            String temp = numberOfCounter.getText().toString();
+            noOfCounter = Integer.parseInt(temp);
+        }
         final SignupController setDefaultUserDataUsingController = new SignupController(name,email,pass,0);
-        final SignupControllerOrg setDefaultOrgDataUsingController = new SignupControllerOrg(name,email,pass,0,0);
+        final SignupControllerOrg setDefaultOrgDataUsingController = new SignupControllerOrg(name,email,pass,0,0,noOfCounter);
 
         mAuth.createUserWithEmailAndPassword(e,p)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

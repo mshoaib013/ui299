@@ -8,6 +8,20 @@ public class SignupControllerOrg {
     private String pass;//pass
     private Integer totalInQue;//Total service que
     private Integer runningSerial;
+    private Integer counters;
+
+    public SignupControllerOrg() {
+
+    }
+
+    public SignupControllerOrg(String name, String email, String pass, Integer totalInQue, Integer runningSerial, Integer counters) {
+        this.name = name;
+        this.email = email;
+        this.pass = pass;
+        this.totalInQue = totalInQue;
+        this.runningSerial = runningSerial;
+        this.counters = counters;
+    }
 
     public String getName() {
         return name;
@@ -49,16 +63,11 @@ public class SignupControllerOrg {
         this.runningSerial = runningSerial;
     }
 
-    public SignupControllerOrg() {
-
+    public Integer getCounters() {
+        return counters;
     }
 
-    public SignupControllerOrg(String name, String email, String pass, Integer totalInQue, Integer runningSerial) {
-
-        this.name = name;
-        this.email = email;
-        this.pass = pass;
-        this.totalInQue = totalInQue;
-        this.runningSerial = runningSerial;
+    public void setCounters(Integer counters) {
+        this.counters = counters;
     }
 }

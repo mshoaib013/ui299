@@ -56,6 +56,9 @@ public class UserHome extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child("k2vsEDEi6Qa1IOpOkaSTOLYaz8o1");
+
         setContentView(R.layout.activity_user_home);
         currentPosition = (TextView)findViewById(R.id.userHomeCurrentPosition);
         estimatedTime = (TextView)findViewById(R.id.userHomeEstimatedTime);
@@ -91,8 +94,21 @@ public class UserHome extends AppCompatActivity
         scanQrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(UserHome.this, "This is my Toast message!",Toast.LENGTH_LONG).show();
-                mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child("Pjl68etfWfZzzh9bHZJTAGKQZCv1");
+
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                            snapshot.getRef().setValue(String.valueOf(1));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
 //                user = mAuth.getCurrentUser();
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -132,7 +148,7 @@ public class UserHome extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
         }
     }
 
