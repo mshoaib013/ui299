@@ -1,15 +1,23 @@
 package com.example.darkshadow.qskip;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -37,27 +45,51 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth mAuth;
     LinearLayout viewOne;
+    SignupControllerOrg org;
     LinearLayout viewTwo;
+    int aa;
+    int max,decMax[];
     private static final int REQUEST_CODE_QR_SCAN = 101;
     Bitmap bitmap;
     Integer totalInQ;
     String uid;
     FirebaseUser user;
-    int i = 0;
+    int i = 0,myPosition;
+    int arr[];
     DatabaseReference database;
     DatabaseReference mDatabase;
     TextView currentPosition,estimatedTime;
+    Date firstTime,lastTime,estimateTime;
+    Date d=new Date();
+    Vibrator v;
+    SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
+        arr = new int[100];
+        decMax = new int[100];
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Org");
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child("k2vsEDEi6Qa1IOpOkaSTOLYaz8o1");
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.beep);
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+
+
+
+
+
 
         setContentView(R.layout.activity_user_home);
         currentPosition = (TextView)findViewById(R.id.userHomeCurrentPosition);
@@ -95,37 +127,20 @@ public class UserHome extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                            snapshot.getRef().setValue(String.valueOf(1));
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-//                user = mAuth.getCurrentUser();
                 mDatabase.addValueEventListener(new ValueEventListener() {
+
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        myPosition = (int) dataSnapshot.getChildrenCount();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                            SignupControllerOrg org = snapshot.getValue(SignupControllerOrg.class);
 
-                        totalInQ = (int) (long) dataSnapshot.child("que").getChildrenCount();
-                        final SignupControllerOrg getOrgInfo=dataSnapshot.getValue(SignupControllerOrg.class);
+                            Log.d("zzzzzzz", String.valueOf(snapshot.child("totalInQue").getValue(Integer.class)));
+//                            aa = snapshot.child("totalInQue").getValue(int.class);
+                            totalInQ = (int) (long) dataSnapshot.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").getChildrenCount();
 
-                        uid = mAuth.getUid();
-//                        String email = getOrgInfo.getEmail();
-//                        mDatabase.child("")
-//                        mDatabase.child("aa").child("bb");
-                        if (i<=0){
-                            setQue();
                         }
-
-
                     }
 
                     @Override
@@ -135,8 +150,62 @@ public class UserHome extends AppCompatActivity
                 });
 
 
+                Map<String, Object> updates = new HashMap<String,Object>();
+
+                updates.put("totalInQue", 0);
+                mDatabase.updateChildren(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                final SignupControllerOrg getOrgInfo=dataSnapshot.getValue(SignupControllerOrg.class);
+                                uid = mAuth.getUid();
+                                if (i<=0){
+                                    setQue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
 
 
+            }
+        });
+
+        //update always position
+        firstTime = Calendar.getInstance().getTime();
+        lastTime = firstTime;
+        myPosition = myPosition+2;
+        mDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    totalInQ = (int) (long) dataSnapshot.getChildrenCount();
+                    myPosition = myPosition-1;
+                    currentPosition.setText("Current Position : "+ totalInQ);
+                    estimatedTime.setText("Estimated Time : "+ myPosition);
+
+                if (totalInQ<1){
+                    currentPosition.setTextColor(Color.BLUE);
+                    estimatedTime.setTextColor(Color.BLUE);
+
+                    // Vibrate for 500 milliseconds
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        //deprecated in API 26
+                        v.vibrate(500);
+                    }
+                }
+//                    mp.start();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
@@ -148,7 +217,7 @@ public class UserHome extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-//            super.onBackPressed();
+            super.onBackPressed();
         }
     }
 
@@ -201,41 +270,14 @@ public class UserHome extends AppCompatActivity
     void setQue(){
         i=10;
         final QueController setQueController = new QueController(uid,totalInQ);
-//        database = FirebaseDatabase.getInstance().getReference().child("total");
-//        database.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                int total = dataSnapshot.
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
-        mDatabase.child("que").child(String.valueOf(totalInQ)).setValue(setQueController).addOnCompleteListener(new OnCompleteListener<Void>() {
+        mDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").child(String.valueOf(totalInQ+1)).setValue(setQueController).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-
-//                                final DatabaseReference matabase;
-//                                matabase = FirebaseDatabase.getInstance().getReference().child("Org").child("yeVr6Ll2OahgcXR5olP6tnf3Pi42").child("runningSerial");
-//                                matabase.setValue(matabase,totalInQ).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        Log.d("Workinggggggggggg", "onComplete: ");
-//                                    }
-//                                });
-//                viewOne.setVisibility(View.GONE);
-//                viewTwo.setVisibility(View.VISIBLE);
                 currentPosition.setText("Current Position : "+totalInQ);
                 estimatedTime.setText("Estimated Time : "+totalInQ/2);
-
                 Intent i = new Intent(UserHome.this,QrCodeActivity.class);
                 startActivityForResult( i,REQUEST_CODE_QR_SCAN);
-
-
-
+//                mDatabase.
             }
         });
     }
@@ -283,11 +325,24 @@ public class UserHome extends AppCompatActivity
                     });
             alertDialog.show();
 
-            if (result.equals("Pjl68etfWfZzzh9bHZJTAGKQZCv1")){
+            if (result.equals("H8CvPTCEHzZo1zKHJMQt39fDwht2")){
                 viewOne.setVisibility(View.GONE);
                 viewTwo.setVisibility(View.VISIBLE);
             }
 
         }
+    }
+
+    public int largest(){
+
+        for (int counter = 1; counter < arr.length; counter++)
+        {
+            if (arr[counter] > max)
+            {
+                max = decMax[counter];
+            }
+        }
+
+        return max;
     }
 }

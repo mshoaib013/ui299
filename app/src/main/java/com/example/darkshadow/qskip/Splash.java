@@ -117,7 +117,7 @@ public class Splash extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         CountDownTimer timeOutRed;
-        timeOutRed=new CountDownTimer(3000, 1000) { // adjust the milli seconds here
+        timeOutRed=new CountDownTimer(1, 1000) { // adjust the milli seconds here
             public void onTick(long millisUntilFinished) {
 
             }
