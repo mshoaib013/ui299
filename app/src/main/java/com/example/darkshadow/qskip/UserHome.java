@@ -59,16 +59,18 @@ public class UserHome extends AppCompatActivity
     SignupControllerOrg org;
     LinearLayout viewTwo;
     int aa;
+    boolean oneTime = true;
     int max,decMax[];
     private static final int REQUEST_CODE_QR_SCAN = 101;
     Bitmap bitmap;
     Integer totalInQ;
     String uid;
+    long temp;
     FirebaseUser user;
     int i = 0,myPosition;
     int arr[];
     DatabaseReference database;
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabase,mmDatabase;
     TextView currentPosition,estimatedTime;
     Date firstTime,lastTime,estimateTime;
     Date d=new Date();
@@ -81,6 +83,7 @@ public class UserHome extends AppCompatActivity
         arr = new int[100];
         decMax = new int[100];
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Org");
+        mmDatabase = FirebaseDatabase.getInstance().getReference().child("Org");
 
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.beep);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -122,75 +125,49 @@ public class UserHome extends AppCompatActivity
         viewOne = findViewById(R.id.view1);
         viewTwo = findViewById(R.id.view2);
         Button cancelAppointment = (Button) findViewById(R.id.cancelAppointmentButton);
+        uid = mAuth.getUid();
 
         scanQrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                mDatabase.addValueEventListener(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        myPosition = (int) dataSnapshot.getChildrenCount();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                            SignupControllerOrg org = snapshot.getValue(SignupControllerOrg.class);
-
-                            Log.d("zzzzzzz", String.valueOf(snapshot.child("totalInQue").getValue(Integer.class)));
-//                            aa = snapshot.child("totalInQue").getValue(int.class);
-                            totalInQ = (int) (long) dataSnapshot.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").getChildrenCount();
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-
-                Map<String, Object> updates = new HashMap<String,Object>();
-
-                updates.put("totalInQue", 0);
-                mDatabase.updateChildren(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                final SignupControllerOrg getOrgInfo=dataSnapshot.getValue(SignupControllerOrg.class);
-                                uid = mAuth.getUid();
-                                if (i<=0){
-                                    setQue();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                });
-
-
+                        Intent i = new Intent(UserHome.this,QrCodeActivity.class);
+                        startActivityForResult( i,REQUEST_CODE_QR_SCAN);
             }
         });
 
         //update always position
         firstTime = Calendar.getInstance().getTime();
         lastTime = firstTime;
-        myPosition = myPosition+2;
-        mDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").addValueEventListener(new ValueEventListener() {
+
+        mmDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    totalInQ = (int) (long) dataSnapshot.getChildrenCount();
+
+                totalInQ = (int) (long) dataSnapshot.getChildrenCount();
+                Log.d("zztotalINQ", String.valueOf(totalInQ));
+                //fixed position not changing on data change
+                if (oneTime == true){
+                    Log.d("zz", String.valueOf(oneTime));
+                    myPosition = totalInQ;
+                    temp = myPosition;
+                    oneTime = false;
+                    Log.d("zz", String.valueOf(oneTime));
+
+                    Log.d("zz", String.valueOf(myPosition));
+                }
+                //check if decrease
+                if (dataSnapshot.getChildrenCount()<temp){
                     myPosition = myPosition-1;
+                }
+                else {
+                    temp = dataSnapshot.getChildrenCount();
+                }
+
+
                     currentPosition.setText("Current Position : "+ totalInQ);
                     estimatedTime.setText("Estimated Time : "+ myPosition);
 
-                if (totalInQ<1){
+                if (totalInQ<5){
                     currentPosition.setTextColor(Color.BLUE);
                     estimatedTime.setTextColor(Color.BLUE);
 
@@ -273,10 +250,8 @@ public class UserHome extends AppCompatActivity
         mDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").child(String.valueOf(totalInQ+1)).setValue(setQueController).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                currentPosition.setText("Current Position : "+totalInQ);
-                estimatedTime.setText("Estimated Time : "+totalInQ/2);
-                Intent i = new Intent(UserHome.this,QrCodeActivity.class);
-                startActivityForResult( i,REQUEST_CODE_QR_SCAN);
+//                currentPosition.setText("Current Position : "+totalInQ);
+//                estimatedTime.setText("Estimated Time : "+totalInQ/2);
 //                mDatabase.
             }
         });
@@ -328,6 +303,7 @@ public class UserHome extends AppCompatActivity
             if (result.equals("H8CvPTCEHzZo1zKHJMQt39fDwht2")){
                 viewOne.setVisibility(View.GONE);
                 viewTwo.setVisibility(View.VISIBLE);
+                setQue();
             }
 
         }
