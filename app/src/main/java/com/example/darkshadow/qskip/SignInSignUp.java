@@ -2,6 +2,7 @@ package com.example.darkshadow.qskip;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignInSignUp extends AppCompatActivity {
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
 
     FirebaseAuth mAuth;
     String message;
@@ -23,6 +31,7 @@ public class SignInSignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
+        hide();
         setContentView(R.layout.activity_sign_in_sign_up);
 
         Button signup = (Button) findViewById(R.id.signupButton);

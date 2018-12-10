@@ -2,6 +2,7 @@ package com.example.darkshadow.qskip;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class InstitutionOption extends AppCompatActivity {
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
     TextView serviceLeft;
     DatabaseReference mDatabase;
     Button next;
@@ -26,6 +34,7 @@ public class InstitutionOption extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_institution_option);
+        hide();
         arr = new int[100];
 
         next = (Button)findViewById(R.id.institutionOptionsNext);

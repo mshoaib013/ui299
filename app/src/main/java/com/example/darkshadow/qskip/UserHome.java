@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -53,6 +54,13 @@ import java.util.Map;
 
 public class UserHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
 
     FirebaseAuth mAuth;
     LinearLayout viewOne;
@@ -80,6 +88,7 @@ public class UserHome extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
+        hide();
         arr = new int[100];
         decMax = new int[100];
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Org");

@@ -2,6 +2,7 @@ package com.example.darkshadow.qskip;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignInn extends AppCompatActivity {
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
     EditText emaill,passs;
     Button signin;
     EditText email,pass;
@@ -31,6 +39,7 @@ public class SignInn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_inn);
         mAuth = FirebaseAuth.getInstance();
+        hide();
 
 
         mAuth = FirebaseAuth.getInstance();

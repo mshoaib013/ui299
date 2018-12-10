@@ -3,6 +3,7 @@ package com.example.darkshadow.qskip;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Mode extends AppCompatActivity {
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
     DatabaseReference mDatabase;
     FirebaseAuth mAuth;
     String waitMessage = "Wait a while";
@@ -30,6 +38,7 @@ public class Mode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mode);
+        hide();
 
         waitMessageTextField = (TextView)findViewById(R.id.userModeWaitingText);
 
