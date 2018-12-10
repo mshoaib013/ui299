@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,19 +33,22 @@ public class InstitutionOption extends AppCompatActivity {
     Button next;
     long total = 0;
     int[] arr;
+    FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_institution_option);
         hide();
         arr = new int[100];
+        mAuth = FirebaseAuth.getInstance();
 
         next = (Button)findViewById(R.id.institutionOptionsNext);
 
 
 
         serviceLeft = (TextView)findViewById(R.id.insttutionOptionServiceLeft);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child(mAuth.getUid()).child("que");
         mDatabase.addValueEventListener(new ValueEventListener() {
 
             @Override
