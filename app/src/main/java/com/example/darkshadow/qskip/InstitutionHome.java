@@ -29,6 +29,14 @@ public class InstitutionHome extends AppCompatActivity {
         hide();
 
         Button printQRCode = (Button) findViewById(R.id.printQRCodeButton);
+        Button getQR = (Button) findViewById(R.id.getQRCode);
+        getQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InstitutionHome.this, GetQRCode.class);
+                startActivity(intent);
+            }
+        });
         printQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,7 +48,7 @@ public class InstitutionHome extends AppCompatActivity {
         serv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(InstitutionHome.this, InstitutionOption.class);
+                Intent intent = new Intent(InstitutionHome.this, WithdwawDeposite.class);
                 startActivity(intent);
             }
         });

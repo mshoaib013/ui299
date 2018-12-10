@@ -14,12 +14,14 @@
         android:foregroundGravity="center">
 
         <EditText
+            android:textColor="#FFFFFF"
             android:id="@+id/signinEmailField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="Email"/>
         <EditText
+            android:textColor="#FFFFFF"
             android:id="@+id/signinPassField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

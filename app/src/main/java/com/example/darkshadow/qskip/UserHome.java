@@ -54,6 +54,20 @@ import java.util.Map;
 
 public class UserHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    public int getIndexOfLargest()
+    {
+        if ( arr == null || arr.length == 0 ) return -1; // null or empty
+
+        int largest = 0;
+        for ( int l = 1; l < arr.length; l++ )
+        {
+            if ( arr[l] > arr[largest] ) largest = l;
+        }
+        return largest; // position of the first largest found
+    }
+
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -61,6 +75,8 @@ public class UserHome extends AppCompatActivity
             actionBar.hide();
         }
     }
+
+
 
     FirebaseAuth mAuth;
     LinearLayout viewOne;
@@ -73,9 +89,10 @@ public class UserHome extends AppCompatActivity
     Bitmap bitmap;
     Integer totalInQ;
     String uid;
+    int a;
     long temp;
     FirebaseUser user;
-    int i = 0,myPosition;
+    int i = 0,b,myPosition;
     int arr[];
     DatabaseReference database;
     DatabaseReference mDatabase,mmDatabase;
@@ -86,10 +103,10 @@ public class UserHome extends AppCompatActivity
     SimpleDateFormat sdf=new SimpleDateFormat("hh:mm a");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        arr= new int[100];
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         hide();
-        arr = new int[100];
         decMax = new int[100];
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Org");
         mmDatabase = FirebaseDatabase.getInstance().getReference().child("Org");
@@ -151,6 +168,19 @@ public class UserHome extends AppCompatActivity
         mmDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int c = 0,i = 0;
+                a = 0;
+                b = 0;
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    QueController queController = snapshot.getValue(QueController.class);
+                    a = queController.position;
+                    Log.d("xx", String.valueOf(a));
+                    if (b<a){
+                        b=a;
+                    }
+                }
+
 
                 totalInQ = (int) (long) dataSnapshot.getChildrenCount();
                 Log.d("zztotalINQ", String.valueOf(totalInQ));
@@ -187,6 +217,20 @@ public class UserHome extends AppCompatActivity
                         //deprecated in API 26
                         v.vibrate(500);
                     }
+                    mp.start();
+                }
+                if (totalInQ==0){
+                    currentPosition.setText("");
+                    estimatedTime.setText("Rady To Go");
+
+                    // Vibrate for 500 milliseconds
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        //deprecated in API 26
+                        v.vibrate(500);
+                    }
+                    mp.start();
                 }
 //                    mp.start();
             }
@@ -255,8 +299,9 @@ public class UserHome extends AppCompatActivity
     }
     void setQue(){
         i=10;
-        final QueController setQueController = new QueController(uid,totalInQ);
-        mDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").child(String.valueOf(totalInQ+1)).setValue(setQueController).addOnCompleteListener(new OnCompleteListener<Void>() {
+        final QueController setQueController = new QueController(uid,b+1);
+        Log.d("xxx", String.valueOf(b));
+        mDatabase.child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que").child(String.valueOf(b+1)).setValue(setQueController).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 //                currentPosition.setText("Current Position : "+totalInQ);

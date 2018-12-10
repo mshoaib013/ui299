@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class InstitutionOption extends AppCompatActivity {
+    int b;
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -42,12 +44,13 @@ public class InstitutionOption extends AppCompatActivity {
 
 
         serviceLeft = (TextView)findViewById(R.id.insttutionOptionServiceLeft);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child("k2vsEDEi6Qa1IOpOkaSTOLYaz8o1").child("que");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Org").child("H8CvPTCEHzZo1zKHJMQt39fDwht2").child("que");
         mDatabase.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int a = 0,b = 0,c = 0,i = 0;
+                int a = 0,c = 0,i = 0;
+                b = 10000;
                 serviceLeft.setText(String.valueOf(dataSnapshot.getChildrenCount()));
 
 
@@ -55,7 +58,9 @@ public class InstitutionOption extends AppCompatActivity {
                     QueController queController = snapshot.getValue(QueController.class);
                     a = queController.position;
                     arr[i] = queController.getPosition();
-                    i++;
+                    if (b>a){
+                        b = a;
+                    }
                 }
             }
 
@@ -64,32 +69,11 @@ public class InstitutionOption extends AppCompatActivity {
 
             }
         });
-
-
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int a=smallest();
-                mDatabase.child(String.valueOf(a)).removeValue();
+                mDatabase.child(String.valueOf(b)).removeValue();
             }
         });
-
-    }
-
-    public int smallest(){
-        int temp;
-        for (int i = 0; i < arr.length; i++)
-        {
-            for (int j = i + 1; j < total; j++)
-            {
-                if (arr[i] > arr[j])
-                {
-                    temp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = temp;
-                }
-            }
-        }
-        return arr[0];
     }
 }

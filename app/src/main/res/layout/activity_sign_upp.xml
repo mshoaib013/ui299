@@ -14,6 +14,7 @@
         android:gravity="center"
         android:foregroundGravity="center">
         <EditText
+            android:textColor="#FFFFFF"
             android:id="@+id/signupNameField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,6 +23,7 @@
             android:inputType="text"/>
 
         <EditText
+            android:textColor="#FFFFFF"
             android:id="@+id/signupEmailField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,6 +31,7 @@
             android:hint="Email"
             android:inputType="textEmailAddress"/>
         <EditText
+            android:textColor="#FFFFFF"
             android:id="@+id/signupPassField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,6 +40,7 @@
             android:inputType="textPassword"/>
 
         <EditText
+            android:textColor="#FFFFFF"
             android:id="@+id/signupRepeatPassField"
             android:textAlignment="center"
             android:layout_width="wrap_content"

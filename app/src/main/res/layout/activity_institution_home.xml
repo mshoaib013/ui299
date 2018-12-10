@@ -14,16 +14,19 @@
         android:gravity="center"
         android:foregroundGravity="center">
         <Button
+            android:visibility="gone"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Profile"/>
         <Button
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="History"/>
 
         <Button
+            android:visibility="gone"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,10 +40,12 @@
 
         <Button
 
+            android:id="@+id/getQRCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Get Qr Code"/>
         <Button
+            android:visibility="gone"
             android:id="@+id/printQRCodeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -15,6 +15,7 @@
         android:foregroundGravity="center">
 
         <TextView
+            android:textColor="#FFFFFF"
             android:textAlignment="center"
             android:id="@+id/insttutionOptionServiceLeft"
             android:textSize="30dp"
